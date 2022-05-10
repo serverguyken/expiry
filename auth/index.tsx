@@ -53,7 +53,7 @@ const Signup = () => {
                 <div className="form">
                     <input type="text" id="email" className="border-gray-100" />
                     <input type="password" id="password" />
-                    <button>Create account</button>
+                    <button>Create account</button> 
                 </div>
             </div>
         </div>
