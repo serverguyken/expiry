@@ -2,6 +2,7 @@ import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, orderBy, query, collection, setDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { User } from '../interface/User';
 interface FirebaseConfig {
     apiKey: string | undefined;
     authDomain: string | undefined;
@@ -40,4 +41,35 @@ export const SetDoc = async (collection: any, data: any) => await setDoc(collect
 export const AddDoc = async (collection: any, data: any) => await addDoc(collection, data);
 export const UpdateDoc = async (collection: any, data: any) => await updateDoc(collection, data);
 export const DeleteDoc = async (collection: any) => await deleteDoc(collection);
+const createDocRef = (name: string, id: string) => {
+    return docRef(name, id)
+}
+const createCollectionRef = (name: string) => {
+    return collectionRef(name)
+}
 const productsCollection = collectionRef('products');
+
+const getUserData = async () => {
+    const ref = createDocRef("users", "e6yEidlt0a2B5WTwa8eR")
+    const user = await (await getDoc(ref)).data()
+    return user
+}
+
+const getUserProducts = async () => {
+    const { prodsID } = await getUserData() as User
+    const getProducts = async () => {
+        const ref = createDocRef(`users/e6yEidlt0a2B5WTwa8eR/products`, prodsID)
+        const products = await (await getDoc(ref)).data()
+        return products
+    }
+    const products = await getProducts();
+    
+}
+getUserProducts()
+
+const p = [{
+    id: "",
+    item: "sugar",
+    expires: "",
+    purchased: ""
+}]
