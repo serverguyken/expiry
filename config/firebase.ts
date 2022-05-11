@@ -62,10 +62,8 @@ const getUserProducts = async () => {
         const products = await (await getDoc(ref)).data()
         return products
     }
-    const products = await getProducts();
-    
+    const products = await getProducts();   
 }
-getUserProducts()
 
 const p = [{
     id: "",
