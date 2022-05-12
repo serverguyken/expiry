@@ -1,5 +1,9 @@
+import CheckAuth from "../../auth/CheckAuth";
+import { auth } from "../../config/firebase";
+import useUserContext from "../../provider/userProvider";
+
 const CreateProduct = () => {
-    return (
+    return (<CheckAuth>
         <main className="main_comp">
             <div className="logo">
                 <h1 className='bg-blue-500 p-1 text-lg text-white'>Expiry</h1>
@@ -10,7 +14,7 @@ const CreateProduct = () => {
                 </div>
             </div>
         </main>
-    )
+    </CheckAuth>)
 }
 
 export default CreateProduct
@@ -20,6 +24,6 @@ export async function getServerSideProps(ctx: any) {
     return {
         props: {
             useAuth: true
-        }, // will be passed to the page component as props
+        },
     }
 }

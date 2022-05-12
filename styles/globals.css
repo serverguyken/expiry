@@ -15,6 +15,12 @@ a {
   text-decoration: none;
 }
 
+
+.main_container {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 * {
   box-sizing: border-box;
   

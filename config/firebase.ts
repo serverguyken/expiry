@@ -1,5 +1,5 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, orderBy, query, collection, setDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { User } from '../interface/User';
@@ -41,28 +41,39 @@ export const SetDoc = async (collection: any, data: any) => await setDoc(collect
 export const AddDoc = async (collection: any, data: any) => await addDoc(collection, data);
 export const UpdateDoc = async (collection: any, data: any) => await updateDoc(collection, data);
 export const DeleteDoc = async (collection: any) => await deleteDoc(collection);
-const createDocRef = (name: string, id: string) => {
+export const createDocRef = (name: string, id: string) => {
     return docRef(name, id)
 }
-const createCollectionRef = (name: string) => {
+export const createCollectionRef = (name: string) => {
     return collectionRef(name)
 }
-const productsCollection = collectionRef('products');
+export const createUserAuth = (email: string, password:string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
+    createUserWithEmailAndPassword(auth, email, password).then((userData) => onSuccess(userData)).catch((error: any) => onError(error))
+}
+export const logInUserAuth = (email: string, password:string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
+    signInWithEmailAndPassword(auth, email, password).then((userData) => onSuccess(userData)).catch((error: any) => onError(error))
+}
+export const addUser = (uid: string, data: {email: string, prodsID: string}, onSuccess: (data: any) => void, onError: (error: any) => void) => {
+    const ref = createDocRef("users", uid)
+    SetDoc(ref, data).then((data: any) => onSuccess(data)).catch((error: any) => onError(error))
+}
+export const productsCollection = collectionRef('products');
 
-const getUserData = async () => {
-    const ref = createDocRef("users", "e6yEidlt0a2B5WTwa8eR")
+export const getUserData = async (uid: string) => {
+    const ref = createDocRef("users", uid)
     const user = await (await getDoc(ref)).data()
     return user
 }
 
-const getUserProducts = async () => {
-    const { prodsID } = await getUserData() as User
+export const getUserProducts = async (uid: string) => {
+    const { prodsID } = await getUserData(uid) as User
     const getProducts = async () => {
-        const ref = createDocRef(`users/e6yEidlt0a2B5WTwa8eR/products`, prodsID)
+        const ref = createDocRef(`users/${uid}/products`, prodsID)
         const products = await (await getDoc(ref)).data()
         return products
     }
     const products = await getProducts();   
+    return products
 }
 
 const p = [{
