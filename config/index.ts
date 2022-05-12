@@ -22,11 +22,15 @@ export const setErrorCodeMessage = (code: string) => {
     switch (code) {
         case "auth/user-not-found":
             return {
-                message: "No user with provided credentials exist"
+                message: "No user with provided credentials exist."
             }
         case "auth/wrong-password":
             return {
-                message: "Invalid password"
+                message: "Invalid password."
+            }
+        case "auth/email-already-in-use":
+            return {
+                message: "The provided email address is already associated with another account."
             }
         default:
             return {

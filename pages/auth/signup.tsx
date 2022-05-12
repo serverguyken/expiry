@@ -4,6 +4,7 @@ import { setClass, validate } from "../../utils"
 import Link from "next/link";
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const SignUp = () => {
     const [email, setEmail] = useState("")
@@ -76,53 +77,60 @@ const SignUp = () => {
 
 
     return (
-        <div className="sign_up main_container max-w-lg m-auto w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className="sign_up_header mt-5">
-                <h1 className="text-2xl font-semibold">Sign Up for Expiry</h1>
-                <p className='mt-1'>Create your expiry account today!</p>
-                <div className="form mt-5">
-                    <div className="form_inputs mb-4">
-                        <div className="block email_input mb-2">
-                            <input type="text" id="email"
-                                onChange={(e: any) => setEmail(e.target.value)}
-                                placeholder="Email"
-                                className={setClass("placeholder-gray-500 p-2 w-full max-w-md rounded select-none appearance-none", !emailError ? "border-none ring-1 ring-gray-200 focus:outline-none focus:border-none focus:ring-1 focus:ring-blue-500" : "border-none ring-1 ring-red-500 focus:outline-none focus:border-none focus:ring-1 focus:ring-red-500")} />
-                            <p className="text-red-300 text-sm mt-1">
-                                {emailErrorMessage}
-                            </p>
+        <div>
+            <Head>
+                <title>Sign Up / Expiry</title>
+                <meta name="description" content="Sign Up for Expiry" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <div className="sign_up main_container max-w-lg m-auto w-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div className="sign_up_header mt-5">
+                    <h1 className="text-2xl font-semibold">Sign Up for Expiry</h1>
+                    <p className='mt-1'>Create your expiry account today!</p>
+                    <div className="form mt-5">
+                        <div className="form_inputs mb-4">
+                            <div className="block email_input mb-2">
+                                <input type="text" id="email"
+                                    onChange={(e: any) => setEmail(e.target.value)}
+                                    placeholder="Email"
+                                    className={setClass("placeholder-gray-500 p-2 w-full max-w-md rounded  appearance-none", !emailError ? "border-none ring-1 ring-gray-200 focus:outline-none focus:border-none focus:ring-1 focus:ring-blue-500" : "border-none ring-1 ring-red-500 focus:outline-none focus:border-none focus:ring-1 focus:ring-red-500")} />
+                                <p className="text-red-300 text-sm mt-1">
+                                    {emailErrorMessage}
+                                </p>
+                            </div>
+                            <div className="block password_input">
+                                <input type="password" id="password"
+                                    onChange={(e: any) => setPassword(e.target.value)}
+                                    placeholder="Password"
+                                    className={setClass("placeholder-gray-500 p-2 w-full max-w-md rounded appearance-none", !passwordError ? "border-none ring-1 ring-gray-200 focus:outline-none focus:border-none focus:ring-1 focus:ring-blue-500" : "border-none ring-1 ring-red-500 focus:outline-none focus:border-none focus:ring-1 focus:ring-red-500")} />
+                                <p className="text-red-300 text-sm mt-1">
+                                    {passwordErrorMessage}
+                                </p>
+                            </div>
                         </div>
-                        <div className="block password_input">
-                            <input type="password" id="password"
-                                onChange={(e: any) => setPassword(e.target.value)}
-                                placeholder="Password"
-                                className={setClass("placeholder-gray-500 p-2 w-full max-w-md rounded select-none appearance-none", !passwordError ? "border-none ring-1 ring-gray-200 focus:outline-none focus:border-none focus:ring-1 focus:ring-blue-500" : "border-none ring-1 ring-red-500 focus:outline-none focus:border-none focus:ring-1 focus:ring-red-500")} />
-                            <p className="text-red-300 text-sm mt-1">
-                                {passwordErrorMessage}
-                            </p>
-                        </div>
+                        {
+                            !loading ?
+                                < button
+                                    onClick={handleSignUp}
+                                    className="bg-blue-500 text-white rounded p-2 w-full max-w-md hover:bg-opacity-90">Create account</button>
+                                :
+                                <button
+                                    className="bg-blue-500 text-white rounded p-2 w-full max-w-md hover:bg-opacity-90">Loading....</button>
+                        }
                     </div>
-                    {
-                        !loading ?
-                            < button
-                                onClick={handleSignUp}
-                                className="bg-blue-500 text-white rounded p-2 w-full max-w-md hover:bg-opacity-90">Create account</button>
-                            :
-                            <button
-                                className="bg-blue-500 text-white rounded p-2 w-full max-w-md hover:bg-opacity-90">Loading....</button>
-                    }
+                    <div className="signup_error mt-1">
+                        <p className="text-red-500 text-sm">
+                            {errorMessage}
+                        </p>
+                    </div>
+                    <div className="no_account mt-2">
+                        <p>Already have an account? <span><Link href="/auth/login">
+                            <a className="text-blue-500 underline">Log In</a>
+                        </Link></span></p>
+                    </div>
                 </div>
-                <div className="signup_error mt-1">
-                    <p className="text-red-500 text-sm">
-                        {errorMessage}
-                    </p>
-                </div>
-                <div className="no_account mt-2">
-                    <p>Already have an account? <span><Link href="/auth/login">
-                        <a className="text-blue-500 underline">Log In</a>
-                    </Link></span></p>
-                </div>
-            </div>
-        </div >
+            </div >
+        </div>
     )
 }
 export default SignUp

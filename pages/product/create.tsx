@@ -1,19 +1,25 @@
+import Head from "next/head";
 import CheckAuth from "../../auth/CheckAuth";
-import { auth } from "../../config/firebase";
-import useUserContext from "../../provider/userProvider";
 
 const CreateProduct = () => {
     return (<CheckAuth>
-        <main className="main_comp">
-            <div className="logo">
-                <h1 className='bg-blue-500 p-1 text-lg text-white'>Expiry</h1>
-                <div className="container max-w-[1200px] m-auto">
-                    <div className="products-add">
-                        <h1>Add Products</h1>
+        <div>
+            <Head>
+                <title>Create a new Expiry product / View Expiry products</title>
+                <meta name="description" content="Create a new Expiry product / View Expiry products" />
+                <link rel="icon" href="/favicon.ico" />
+            </Head>
+            <main className="main_comp">
+                <div className="logo">
+                    <h1 className='bg-blue-500 p-1 text-lg text-white'>Expiry</h1>
+                    <div className="container max-w-[1200px] m-auto">
+                        <div className="products-add">
+                            <h1>Add Products</h1>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </div>
     </CheckAuth>)
 }
 
