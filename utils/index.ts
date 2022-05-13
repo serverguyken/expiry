@@ -1,3 +1,4 @@
+import { v4 as UUIDV4 } from 'uuid'
 export const setClass = (...args: any[]) => {
  return args.join(" ")
 }
@@ -56,4 +57,11 @@ export function validate(type: string, value: string): {
                 hasError: false
             }
     }
+}
+
+
+
+
+export const generateProdID = () => {
+    return UUIDV4().substring(0,5)
 }
