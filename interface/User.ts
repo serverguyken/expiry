@@ -4,9 +4,18 @@ export interface User {
 }
 
 export interface UserContext {
-    authUser?: any,
+    authUser?: {
+        uid: string;
+        isAuthenticated: boolean | null;
+    },
     user?: any,
     loading?: any,
     error?: string,
     hasError?: boolean,
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    expires: string
 }

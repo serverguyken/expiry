@@ -48,7 +48,6 @@ export const UserProvider = ({ children }: any) => {
    
     const context: UserContext = {
         authUser,
-        user,
         loading,
         error,
         hasError,

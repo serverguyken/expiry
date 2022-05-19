@@ -3,11 +3,10 @@ import { addUser, createUserAuth, logInUserAuth } from "./firebase";
 export const signUpUser = (data: {
     email: string;
     password: string;
-    prodsID: string
 }, onSuccess: (user: any) => void, onError: (error: string) => void): void => {
     createUserAuth(data.email, data.password, (userData: any) => {
         const { uid } = userData.user
-        addUser(uid, { email: data.email, prodsID: data.prodsID }, (data: any) => onSuccess(data), (error: any) => onError(error))
+        addUser(uid, { email: data.email }, (data: any) => onSuccess(data), (error: any) => onError(error))
     }, (error: any) => onError(error))
 }
 

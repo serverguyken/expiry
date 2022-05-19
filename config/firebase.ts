@@ -53,7 +53,7 @@ export const createUserAuth = (email: string, password:string, onSuccess: (userD
 export const logInUserAuth = (email: string, password:string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
     signInWithEmailAndPassword(auth, email, password).then((userData) => onSuccess(userData)).catch((error: any) => onError(error))
 }
-export const addUser = (uid: string, data: {email: string, prodsID: string}, onSuccess: (data: any) => void, onError: (error: any) => void) => {
+export const addUser = (uid: string, data: {email: string}, onSuccess: (data: any) => void, onError: (error: any) => void) => {
     const ref = createDocRef("users", uid)
     SetDoc(ref, data).then((data: any) => onSuccess(data)).catch((error: any) => onError(error))
 }
@@ -66,15 +66,20 @@ export const getUserData = async (uid: string) => {
 }
 
 export const getUserProducts = async (uid: string) => {
-    const { prodsID } = await getUserData(uid) as User
+    if (uid === '') return []
     const getProducts = async () => {
-        const ref = createDocRef(`users/${uid}/products`, prodsID)
-        const products = await (await getDoc(ref)).data()
+        const ref = createCollectionRef(`users/${uid}/products`)
+        const data = await (await (await GetDocs(ref)).docs)
+        let products: any = []
+        data.forEach((docs: any) => {
+            products.push(docs.data())
+        })
         return products
     }
     const products = await getProducts();   
     return products
 }
+
 
 const p = [{
     id: "",
