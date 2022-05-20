@@ -1,20 +1,55 @@
+import moment from "moment";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import CheckAuth from "../../auth/CheckAuth";
 import ProductList from "../../components/ProductList";
-import { generateProdID } from "../../utils";
+import { addUserProduct } from "../../config/firebase";
+import useUserContext from "../../provider/userProvider";
+import store from "../../store";
+import { createExpiresFromDate, currentDay, currentMonth, currentYear, generateProdID, setClass } from "../../utils";
 
 const CreateProduct = () => {
-    const productId = generateProdID()
+    const [productId, setProductId ] = useState(generateProdID())
     const [productName, setProductName] = useState("")
-    const [expireMonth, setExpireMonth] = useState("Jan")
-    const [expireDay, setExpireDay] = useState("01")
-    const [expireYear, setExpireYear] = useState("2022")
-
+    const [expireMonth, setExpireMonth] = useState(currentMonth)
+    const [expireDay, setExpireDay] = useState(currentDay)
+    const [expireYear, setExpireYear] = useState(currentYear)
+    const [nameError, setNameError] = useState(false)
+    const [nameErrorMessage, setNameErrorMessage] = useState('')
+    const [expiresError , setExpiresError] = useState(false)
+    const [expiresErrorMessage, setExpiresErrorMessage] = useState('')
+    const { authUser } = useUserContext()
+    const uid = authUser!.uid !== '' ? authUser!.uid : ''
     const addProduct = () => {
-        console.log('added');
-        
+        if (productName === '') {
+            setNameError(true)
+            setNameErrorMessage('Product name cannot be empty')
+            return false
+        }
+        const product = {
+            id: productId,
+            name: productName,
+            expires: createExpiresFromDate(expireMonth, expireDay, expireYear)
+        }
+        if (product.expires === "Invalid date") {
+            setExpiresError(true)
+            setExpiresErrorMessage("Please enter a correct date")
+            return false
+        }
+       addUserProduct(uid, product)
+       setProductId(generateProdID())
+       setProductName('')
+       setExpireMonth(currentMonth)
+       setExpireDay(currentDay)
+       setExpireYear(currentYear)
     }
+    
+    useEffect(() => {
+        if (productName !== '') {
+            setNameError(false)
+            setNameErrorMessage('')
+        }
+    }, [productName])
     return (<CheckAuth>
         <div>
             <Head>
@@ -36,11 +71,15 @@ const CreateProduct = () => {
                             </div>
                             <div className="product_name_input mb-3">
                                 <label htmlFor="product_name" className="block text-gray-500">Product Name</label>
-                                <input type="text" id="product_name" className="bg-gray-200 outline-none focus:bg-gray-300 focus:bg-opacity-80 focus:transition-all rounded p-2 w-full font-medium mt-1"
+                                <input type="text" id="product_name"
+                                value={productName} className={setClass("outline-none w-full font-medium mt-1 focus:transition-all rounded p-2  focus:bg-opacity-80",!nameError ? "bg-gray-200 focus:bg-gray-300": "border border-red-400 bg-white focus:bg-white")}
                                     onChange={(e: any) => {
                                         setProductName(e.target.value)
                                     }}
                                 />
+                                {
+                                    nameError && <p className="text-red-400">{nameErrorMessage}</p>
+                                }
                             </div>
                             <div className="product_exp_select mb-3">
                                 <div className="flex justify-between items-center space-x-3">
@@ -51,8 +90,11 @@ const CreateProduct = () => {
                                                 setExpireMonth(e.target.value)
                                             }}
                                         >
+                                            <option value={expireMonth}>
+                                            {expireMonth}
+                                            </option>
                                             <option value="1">
-                                                1
+                                            1
                                             </option>
                                             <option value="2">
                                                 2
@@ -96,31 +138,34 @@ const CreateProduct = () => {
                                                 setExpireDay(e.target.value)
                                             }}
                                         >
-                                            <option value="1">
-                                                1
+                                            <option value={expireDay}>
+                                            {expireDay}
                                             </option>
-                                            <option value="2">
+                                            <option value='01'>
+                                            1
+                                            </option>
+                                            <option value="02">
                                                 2
                                             </option>
-                                            <option value="3">
+                                            <option value="03">
                                                 3
                                             </option>
-                                            <option value="4">
+                                            <option value="04">
                                                 4
                                             </option>
-                                            <option value="5">
+                                            <option value="05">
                                                 5
                                             </option>
-                                            <option value="6">
+                                            <option value="06">
                                                 6
                                             </option>
-                                            <option value="7">
+                                            <option value="07">
                                                 7
                                             </option>
-                                            <option value="8">
+                                            <option value="08">
                                                 8
                                             </option>
-                                            <option value="9">
+                                            <option value="09">
                                                 9
                                             </option>
                                             <option value="10">
@@ -189,26 +234,28 @@ const CreateProduct = () => {
                                             <option value="31">
                                                 31
                                             </option>
-
-
-
-
                                         </select>
                                     </div>
                                     <div className="product_exp_year w-full">
                                         <label className="block text-gray-500">Exp Year</label>
-                                        <input type="number" id="product_name" className="bg-gray-200 outline-none focus:bg-gray-300 focus:bg-opacity-80 focus:transition-all rounded p-2 w-full font-medium mt-1 appearance-none"
+                                        <input type="number" 
+                                        id="product_name" 
+                                        value={expireYear} 
+                                        className="bg-gray-200 outline-none focus:bg-gray-300 focus:bg-opacity-80 focus:transition-all rounded p-2 w-full font-medium mt-1 appearance-none"
                                             onChange={(e: any) => {
                                                 setExpireYear(e.target.value)
                                             }}
                                         />
                                     </div>
                                 </div>
+                                {
+                                    expiresError && <p className="text-red-400">{expiresErrorMessage}</p>
+                                }
                             </div>
                         </div>
                         <div className="product_add_btn mt-8">
                             <button className="bg-blue-500 text-white w-full text-center font-medium rounded p-2 outline-none hover:bg-opacity-90 hover:transition-all"
-                            onClick={() => addProduct}
+                            onClick={addProduct}
                             >Add</button>
                         </div>
                     </div>

@@ -2,7 +2,8 @@ import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore, doc, getDoc, updateDoc, deleteDoc, onSnapshot, orderBy, query, collection, setDoc, getDocs, addDoc } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
-import { User } from '../interface/User';
+import { Product, User } from '../interface/User';
+import store from '../store';
 interface FirebaseConfig {
     apiKey: string | undefined;
     authDomain: string | undefined;
@@ -47,13 +48,13 @@ export const createDocRef = (name: string, id: string) => {
 export const createCollectionRef = (name: string) => {
     return collectionRef(name)
 }
-export const createUserAuth = (email: string, password:string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
+export const createUserAuth = (email: string, password: string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
     createUserWithEmailAndPassword(auth, email, password).then((userData) => onSuccess(userData)).catch((error: any) => onError(error))
 }
-export const logInUserAuth = (email: string, password:string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
+export const logInUserAuth = (email: string, password: string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
     signInWithEmailAndPassword(auth, email, password).then((userData) => onSuccess(userData)).catch((error: any) => onError(error))
 }
-export const addUser = (uid: string, data: {email: string}, onSuccess: (data: any) => void, onError: (error: any) => void) => {
+export const addUser = (uid: string, data: { email: string }, onSuccess: (data: any) => void, onError: (error: any) => void) => {
     const ref = createDocRef("users", uid)
     SetDoc(ref, data).then((data: any) => onSuccess(data)).catch((error: any) => onError(error))
 }
@@ -66,19 +67,32 @@ export const getUserData = async (uid: string) => {
 }
 
 export const getUserProducts = async (uid: string) => {
-    if (uid === '') return []
-    const getProducts = async () => {
-        const ref = createCollectionRef(`users/${uid}/products`)
-        const data = await (await (await GetDocs(ref)).docs)
-        let products: any = []
-        data.forEach((docs: any) => {
-            products.push(docs.data())
+    if (uid === '') []
+    const ref = createCollectionRef(`users/${uid}/products`)
+    let products: any = []
+
+    return new Promise((resolve) => {
+        onSnapshot(ref, (data) => {
+            data.forEach((docs: any) => {
+                products.push(docs.data())
+            })
+            resolve(products)
         })
-        return products
-    }
-    const products = await getProducts();   
-    return products
+    })
 }
+
+export const addUserProduct = async (uid: string, product: Product) => {
+    if (uid == '')`cannot add product ${product.name}`
+    const ref = createDocRef(`users/${uid}/products`, product.id)
+    SetDoc(ref, product).then(() => {
+        return `successfully added product ${product.name}`}).catch(() => `cannot add product ${product.name}`)
+}
+export const deleteUserProduct = async (uid: string, id: string) => {
+    if (uid == '')`cannot delete product`
+    const ref = createDocRef(`users/${uid}/products`, id)
+    DeleteDoc(ref)
+}
+
 
 
 const p = [{

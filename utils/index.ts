@@ -1,7 +1,10 @@
+import moment from 'moment';
 import { v4 as UUIDV4 } from 'uuid'
 export const setClass = (...args: any[]) => {
  return args.join(" ")
 }
+
+
 
 export function validateEmail(email: string): {
     message: string;
@@ -60,8 +63,26 @@ export function validate(type: string, value: string): {
 }
 
 
+export const isBrowser = () => {
+    if (typeof window === undefined) false
+    return true
+}
+
 
 
 export const generateProdID = () => {
     return UUIDV4().substring(0,5)
 }
+
+export const joinDate = (month: string, day: string, year: string) => {
+    return [month, day, year].join('-')
+}
+
+export const createExpiresFromDate = (month: string, day: string, year: string) => {
+    const date = moment(joinDate(year, month, day), 'YYYY MM DD');
+    return moment(date).format('MMM/DD/YYYY');
+}
+
+export const currentMonth = (moment().get('M') + 1).toString()
+export const currentDay = moment().get('D').toString()
+export const currentYear = moment().get('year').toString()
