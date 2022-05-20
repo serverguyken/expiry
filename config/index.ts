@@ -1,4 +1,4 @@
-import { addUser, createUserAuth, logInUserAuth } from "./firebase";
+import { addUser, createUserAuth, logInUserAuth, signOutUserAuth } from "./firebase";
 
 export const signUpUser = (data: {
     email: string;
@@ -14,6 +14,11 @@ export const logInUser = (email: string, password: string, onSuccess: (user: any
     logInUserAuth(email, password, (userData: any) => {
         onSuccess(userData)
     }, (error: any) => onError(error))
+}
+
+
+export const signOutUser = () => {
+    signOutUserAuth()
 }
 
 

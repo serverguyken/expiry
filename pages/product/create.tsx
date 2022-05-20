@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import CheckAuth from "../../auth/CheckAuth";
 import ProductList from "../../components/ProductList";
+import { signOutUser } from "../../config";
 import { addUserProduct } from "../../config/firebase";
 import useUserContext from "../../provider/userProvider";
 import store from "../../store";
@@ -57,8 +58,15 @@ const CreateProduct = () => {
                 <meta name="description" content="Create a new Expiry product / View Expiry products" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <div className="logo">
-                <h1 className='bg-blue-500 pt-3 pb-3 pl-4 text-3xl text-white'>Expiry</h1>
+            <div className="logo bg-blue-500 pt-3 pb-3">
+                <div className="flex justify-between items-center main_container max-w-[1200px] m-auto">
+                    <h1 className='text-3xl text-white'>Expiry</h1>
+                    <div className="signout">
+                        <button className="text-white text-xl hover:text-blue-200"
+                            onClick={() => signOutUser()}
+                        >Sign Out</button>
+                    </div>
+                </div>
             </div>
             <main className="main_comp main_container max-w-[1200px] m-auto">
                 <div className="product_add_section">

@@ -54,6 +54,10 @@ export const createUserAuth = (email: string, password: string, onSuccess: (user
 export const logInUserAuth = (email: string, password: string, onSuccess: (userData: any) => void, onError: (error: string) => void) => {
     signInWithEmailAndPassword(auth, email, password).then((userData) => onSuccess(userData)).catch((error: any) => onError(error))
 }
+
+export const signOutUserAuth = () => {
+    auth.signOut()
+}
 export const addUser = (uid: string, data: { email: string }, onSuccess: (data: any) => void, onError: (error: any) => void) => {
     const ref = createDocRef("users", uid)
     SetDoc(ref, data).then((data: any) => onSuccess(data)).catch((error: any) => onError(error))
