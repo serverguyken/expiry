@@ -115,7 +115,7 @@ const LogIn = () => {
                         </p>
                     </div>
                     <div className="no_account mt-2">
-                        <p>Don't have an account? <span><Link href="/auth/signup">
+                        <p>Don&apos;t have an account? <span><Link href="/auth/signup">
                             <a className="text-blue-500 underline">Sign Up</a>
                         </Link></span></p>
                     </div>
